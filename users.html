@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Property Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Theme colors -->
+    <style>
+        :root {
+            --primary-red: #B4121B;
+            --primary-black: #000000;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--primary-black);
+            font-family: "Work Sans", sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--primary-black);
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar .nav-link {
+            color: #ffffff !important;
+            padding: 15px 20px;
+            border-radius: 0;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: var(--primary-red);
+            color: #ffffff !important;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-red), #9a0f17);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .table thead th {
+            background-color: var(--primary-red);
+            color: #ffffff;
+            border: none;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-red);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="text-center mb-4">
+            <h4 class="text-white">User Panel</h4>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="admin_dashboard">
+                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fas fa-user me-2"></i> Profile
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fas fa-heart me-2"></i> Wishlist
+            </a>
+            <a class="nav-link" href="#">
+                <i class="fas fa-comments me-2"></i> Messages
+            </a>
+            <a class="nav-link" href="logout">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h5>Welcome, {{ request.session.username }}</h5>
+            <div>
+                <span class="me-3">{{ request.session.username }}</span>
+                <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary-red);"></i>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="row mb-4 mt-3">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <i class="fas fa-building fa-2x mb-2"></i>
+                    <h3>12</h3>
+                    <p>My Listed Properties</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <i class="fas fa-heart fa-2x mb-2"></i>
+                    <h3>8</h3>
+                    <p>Saved Properties</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <i class="fas fa-envelope fa-2x mb-2"></i>
+                    <h3>5</h3>
+                    <p>Unread Messages</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Profile Section -->
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Your Profile Details</h5>
+            </div>
+            <div class="card-body">
+                {% for i in r %}
+                <div class="d-flex align-items-center mb-3">
+                    <img src="https://placehold.co/100x100" class="profile-img me-4" alt="User Profile">
+                    <div>
+                        <h5 class="mb-1">{{ i.name }}</h5>
+                        <p class="mb-0 text-muted">Username: {{ i.username }}</p>
+                        <p class="mb-0 text-muted">Password: {{ i.password }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No user information found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">You commented on a property listing <span class="float-end text-muted small">2 min ago</span></li>
+                    <li class="list-group-item">You liked a property <span class="float-end text-muted small">10 min ago</span></li>
+                    <li class="list-group-item">You updated your profile <span class="float-end text-muted small">30 min ago</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

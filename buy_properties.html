@@ -1,0 +1,219 @@
+
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buy Properties — DreamNest Realty</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --royal: #1e3a8a;
+      --royal-2: #2b6cb0;
+      --gold: #d4af37;
+      --muted: #6b7280;
+      --white: #ffffff;
+    }
+    body {
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      font-family: "Poppins", sans-serif;
+      color: #1a202c;
+    }
+    /* NAVBAR */
+    .navbar { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.06); padding: 0.9rem 1.5rem; }
+    .navbar-brand { font-weight:700; color:var(--royal); font-size:1.4rem; display:flex; align-items:center; gap:8px; }
+    .nav-link { color: var(--royal); font-weight:500; margin:0 6px; position:relative; transition:0.3s ease; }
+    .nav-link:hover, .nav-link.active { color: var(--gold); }
+    .btn-gold { background: linear-gradient(90deg,var(--gold),#ffe17a); color:#1a202c; border:none; border-radius:25px; padding:8px 18px; font-weight:600; transition:all 0.3s ease; }
+    .btn-gold:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(212,175,55,0.3); }
+
+    /* HERO */
+    .hero-wrap { position:relative; height:55vh; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:0 0 30px 30px; margin-bottom:40px; }
+    .hero-slide { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity 1.5s ease; }
+    .hero-slide.visible { opacity:1; }
+    .hero-overlay { position:absolute; inset:0; background: rgba(0,0,0,0.35); }
+    .hero-text { position:relative; z-index:2; color:white; text-align:center; }
+    .hero-text h1 { font-size:2.5rem; font-weight:700; }
+    .hero-text p { font-size:1.1rem; opacity:0.9; }
+
+    /* FILTER + PROPERTY CARDS */
+    .filter-card { background:#fff; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,0.06); padding:25px; margin-bottom:40px; }
+    .filter-card label { font-weight:600; color:#374151; }
+    .btn-primary { background: linear-gradient(90deg,var(--royal),var(--royal-2)); border:none; }
+    .card { border:none; border-radius:14px; box-shadow:0 8px 25px rgba(0,0,0,0.08); overflow:hidden; transition:0.3s ease; position:relative; }
+    .card:hover { transform:translateY(-6px); }
+    .card img { height:230px; object-fit:cover; width:100%; }
+    .card-body { padding:20px; }
+    .price { color:var(--royal-2); font-weight:600; }
+
+    /* SOLD DESIGN */
+    .sold-card { opacity:0.6; pointer-events:none; }
+    .sold-overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(220,53,69,0.65); color:white; font-weight:700; font-size:1.8rem; display:flex; justify-content:center; align-items:center; z-index:10; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">DreamNest</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item"><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="{% url 'buy_properties' %}" class="nav-link active">Properties</a></li>
+          <li class="nav-item"><a href="{% url 'services' %}" class="nav-link">Services</a></li>
+          <li class="nav-item"><a href="{% url 'about' %}" class="nav-link">About</a></li>
+          <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-wrap">
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1599423300746-b62533397364?auto=format&fit=crop&w=1600&q=80');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1600&q=80');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+      <h1>Find Your Dream Property</h1>
+      <p>Explore exclusive listings, prime villas, and luxury apartments.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- FILTER FORM -->
+    <form method="get" class="filter-card">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label>Search</label>
+          <input type="text" name="search" class="form-control" placeholder="Location or keyword" value="{{ search_query }}">
+        </div>
+        <div class="col-md-3">
+          <label>Property Type</label>
+          <select name="property_type" class="form-select">
+            <option value="">All Types</option>
+            <option value="APARTMENT" {% if selected_property_type == "APARTMENT" %}selected{% endif %}>Apartment</option>
+            <option value="VILLA" {% if selected_property_type == "VILLA" %}selected{% endif %}>Villa</option>
+            <option value="PLOT" {% if selected_property_type == "PLOT" %}selected{% endif %}>Plot</option>
+            <option value="HOUSE" {% if selected_property_type == "HOUSE" %}selected{% endif %}>House</option>
+            <option value="COMMERCIAL" {% if selected_property_type == "COMMERCIAL" %}selected{% endif %}>Commercial</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label>Bedrooms</label>
+          <select name="bedrooms" class="form-select">
+            <option value="">All</option>
+            <option value="1" {% if selected_bedrooms == "1" %}selected{% endif %}>1 BHK</option>
+            <option value="2" {% if selected_bedrooms == "2" %}selected{% endif %}>2 BHK</option>
+            <option value="3" {% if selected_bedrooms == "3" %}selected{% endif %}>3 BHK</option>
+            <option value="4" {% if selected_bedrooms == "4" %}selected{% endif %}>4+ BHK</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label>Min ₹</label>
+          <input type="number" name="min_price" class="form-control" value="{{ min_price }}">
+        </div>
+        <div class="col-md-2">
+          <label>Max ₹</label>
+          <input type="number" name="max_price" class="form-control" value="{{ max_price }}">
+        </div>
+        <div class="col-md-12 text-end mt-3">
+          <button class="btn btn-primary px-5">Filter</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- PROPERTY CARDS -->
+    <div class="row g-4 mb-5">
+      {% for property in properties %}
+      <div class="col-md-4">
+        <div class="card {% if property.sold %}sold-card{% endif %}">
+          {% if property.image %}
+            <img src="{{ property.image.url }}" class="w-100" alt="{{ property.title }}">
+          {% else %}
+            <img src="{% static 'images1/default-property.jpg' %}" class="w-100" alt="Default Image">
+          {% endif %}
+
+          {% if property.sold %}
+            <div class="sold-overlay">SOLD</div>
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title">{{ property.title }}</h5>
+            <p class="text-muted mb-1">{{ property.location }}</p>
+            <p><strong>Type:</strong> {{ property.get_property_type_display }}</p>
+            <p><strong>Bedrooms:</strong> {{ property.bedrooms }} | <strong>Bathrooms:</strong> {{ property.bathrooms }}</p>
+            <p class="price mb-3">₹ {{ property.price|floatformat:0 }}</p>
+
+            {% if not property.sold %}
+              <a href="{% url 'property_details' property.id %}" class="btn btn-primary w-100">View Details</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center text-muted">No properties found.</p>
+      {% endfor %}
+    </div>
+
+    <!-- USER SELLING PROPERTIES CARDS -->
+    {% if selling_properties %}
+    <div class="row g-4 mb-5">
+      {% for selling in selling_properties %}
+      {% if selling.seller == user %}
+      <div class="col-md-4">
+        <div class="card {% if selling.sold %}sold-card{% endif %}">
+          {% if selling.image %}
+            <img src="{{ selling.image.url }}" class="w-100" alt="{{ selling.title }}">
+          {% else %}
+            <img src="{% static 'images1/default-property.jpg' %}" class="w-100" alt="Default Image">
+          {% endif %}
+
+          {% if selling.sold %}
+            <div class="sold-overlay">SOLD</div>
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title">{{ selling.title }}</h5>
+            <p class="text-muted mb-1">{{ selling.location }}</p>
+            <p><strong>Type:</strong> {{ selling.get_property_type_display }}</p>
+            <p><strong>Bedrooms:</strong> {{ selling.bedrooms }} | <strong>Bathrooms:</strong> {{ selling.bathrooms }}</p>
+            <p class="price mb-3">₹ {{ selling.price|floatformat:0 }}</p>
+
+            {% if not selling.sold %}
+              <a href="{% url 'property_details' selling.id %}" class="btn btn-primary w-100">View Details</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% empty %}
+      <p class="text-center text-muted">No selling properties found.</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- HERO SLIDER SCRIPT -->
+  <script>
+    const slides = document.querySelectorAll('.hero-slide');
+    let index = 0;
+    slides[index].classList.add('visible');
+    setInterval(() => {
+      slides[index].classList.remove('visible');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('visible');
+    }, 6000);
+  </script>
+</body>
+</html>

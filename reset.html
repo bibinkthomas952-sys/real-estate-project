@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DreamNest — Reset Password</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(rgba(0,0,50,0.8), rgba(10,10,30,0.8)),
+              url("{% static 'asset/images/luxury-bg.jpg' %}") no-repeat center center/cover;
+  color: #fff;
+  overflow: hidden;
+}
+
+.container {
+  width: 400px;
+  max-width: 95%;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(25px);
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 8px 35px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.aura {
+  position: absolute;
+  inset: -20px;
+  border-radius: 25px;
+  background: radial-gradient(circle at 20% 20%, rgba(255,215,0,0.2), transparent 70%),
+              radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1), transparent 70%);
+  filter: blur(40px);
+  animation: pulseAura 6s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes pulseAura {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+form {
+  position: relative;
+  z-index: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 1rem;
+  margin-top: 15px;
+  box-shadow: inset 0 0 6px rgba(255,215,0,0.3);
+}
+
+.input:focus {
+  background: rgba(255,255,255,0.35);
+  box-shadow: 0 0 10px rgba(255,215,0,0.6);
+}
+
+.button {
+  margin-top: 25px;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a1f6c, #b1973c);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(177,151,60,0.4);
+  transition: all 0.4s ease;
+}
+
+.button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(177,151,60,0.6);
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.link-back {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  color: #f8f8f8;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.link-back:hover {
+  color: #ffda79;
+}
+
+.toast {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: rgba(20, 20, 60, 0.9);
+  color: #ffd700;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  opacity: 0;
+  transition: all 0.6s ease;
+  z-index: 9999;
+  border: 1px solid rgba(255,215,0,0.3);
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 30px 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="aura"></div>
+
+  <h2>Reset Password</h2>
+
+  {% if error %}
+  <div style="color: #ff8080; text-align:center; margin-bottom: 15px;">{{ error }}</div>
+  {% endif %}
+  {% if success %}
+  <div style="color: #80ff80; text-align:center; margin-bottom: 15px;">{{ success }}</div>
+  {% endif %}
+
+  {% if not success %}
+  <form method="post">
+    {% csrf_token %}
+    <input type="password" name="password" class="input" placeholder="New Password" required>
+    <input type="password" name="confirm_password" class="input" placeholder="Confirm Password" required>
+    <button type="submit" class="button">Reset Password</button>
+  </form>
+  {% endif %}
+
+  <a href="{% url 'login' %}" class="link-back">Back to Login</a>
+</div>
+
+<!-- Toast for feedback -->
+<div id="toast" class="toast"><span id="toast-message"></span></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const message = "{{ success|escapejs }}";
+  if (message) {
+    const toast = document.getElementById("toast");
+    const msg = document.getElementById("toast-message");
+    msg.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 4000);
+  }
+});
+</script>
+</body>
+</html>

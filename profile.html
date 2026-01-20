@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Profile | DreamNest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #f0f4f8; min-height: 100vh; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg flex flex-col border-r">
+    <div class="p-6 border-b flex items-center gap-2">
+      <img src="{% static 'images/company_logo.png' %}" alt="Logo" class="h-8">
+      <h1 class="text-xl font-semibold text-gray-800">DreamNest</h1>
+    </div>
+    <nav class="flex-1 mt-6 space-y-2">
+      <a href="{% url 'home' %}" class="block px-6 py-3 hover:text-blue-600">🏠 Home</a>
+      <a href="{% url 'user_dashboard' %}" class="block px-6 py-3 text-blue-600 font-semibold">👤 Profile</a>
+      <a href="{% url 'payment_history' %}" class="block px-6 py-3 hover:text-blue-600">💳 Payment History</a>
+      <a href="{% url 'refund_request_submit' %}" class="block px-6 py-3 hover:text-blue-600">💰 Refund Requests</a>
+      <a href="{% url 'home' %}" class="block px-6 py-3 text-red-500 hover:text-red-600">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-10">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Profile Header Card -->
+      <div class="bg-gradient-to-r from-blue-50 to-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row items-center gap-6">
+        <img src="{{ user.profile_picture.url|default:'https://i.pravatar.cc/150' }}"
+             alt="Profile Picture"
+             class="w-32 h-32 rounded-full border-4 border-blue-100 shadow-lg object-cover">
+        <div class="flex-1">
+          <h2 class="text-3xl font-semibold text-gray-800">{{ user.username }}</h2>
+          <p class="text-gray-500">{{ user.email }}</p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href="{% url 'payment_history' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow transition">
+              💳 View Payments
+            </a>
+            <a href="{% url 'refund_request_submit' %}" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg shadow transition">
+              💰 View Refunds
+            </a>
+            <button onclick="openEditProfile()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-lg shadow transition">
+              ✏️ Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Details Cards -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+        <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition">
+          <h4 class="text-gray-500 font-medium">Full Name</h4>
+          <p class="text-gray-800 font-semibold mt-2">{{ user.username }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition">
+          <h4 class="text-gray-500 font-medium">Email</h4>
+          <p class="text-gray-800 font-semibold mt-2">{{ user.email }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition">
+          <h4 class="text-gray-500 font-medium">Phone</h4>
+          <p class="text-gray-800 font-semibold mt-2">{{ user.phone|default:"Not provided" }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition">
+          <h4 class="text-gray-500 font-medium">Joined On</h4>
+          <p class="text-gray-800 font-semibold mt-2">{{ user.date_joined|date:"d M Y" }}</p>
+        </div>
+      </div>
+
+      <!-- Purchased Properties -->
+      <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">🏡 Purchased Properties</h3>
+      {% if properties %}
+      <div class="overflow-x-auto scrollbar-hide bg-white border border-gray-200 rounded-2xl shadow-sm">
+        <table class="min-w-full text-sm text-gray-700">
+          <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+            <tr>
+              <th class="py-3 px-4 text-left">Property</th>
+              <th class="py-3 px-4 text-left">Location</th>
+              <th class="py-3 px-4 text-left">Price</th>
+              <th class="py-3 px-4 text-left">Purchase Date</th>
+              <th class="py-3 px-4 text-left">Status</th>
+              <th class="py-3 px-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in properties %}
+            <tr class="border-b hover:bg-blue-50 transition">
+              <td class="py-3 px-4 flex items-center gap-3">
+                <img src="{{ p.property.image.url|default:'/static/images/no_image.jpg' }}" alt="{{ p.property.title }}" class="w-14 h-14 rounded-lg object-cover border">
+                <span class="font-medium text-gray-800">{{ p.property.title }}</span>
+              </td>
+              <td class="py-3 px-4">{{ p.property.location }}</td>
+              <td class="py-3 px-4 text-blue-600 font-semibold">₹{{ p.amount_paid|floatformat:0 }}</td>
+              <td class="py-3 px-4">{{ p.purchase_date|date:"d M Y" }}</td>
+              <td class="py-3 px-4">
+                <span class="px-3 py-1 text-xs rounded-full
+                  {% if p.status == 'Purchased' %} bg-green-100 text-green-700
+                  {% elif p.status == 'Refund Requested' %} bg-yellow-100 text-yellow-700
+                  {% elif p.status == 'Refunded' %} bg-gray-200 text-gray-800
+                  {% else %} bg-gray-100 text-gray-700 {% endif %}">
+                  {{ p.status }}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-center flex justify-center gap-2">
+                <a href="{% url 'property_details' p.property.id %}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-xs">🔍 View</a>
+                {% if p.status == 'Purchased' %}
+                <button onclick="openRefundForm('{{ p.id }}', '{{ p.property.title }}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-xs">💰 Refund</button>
+                {% elif p.status == 'Refund Requested' %}
+                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">Pending ⏳</span>
+                {% elif p.status == 'Refunded' %}
+                <span class="px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-800">Refunded ✅</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center text-gray-600">You haven’t purchased any properties yet.</div>
+      {% endif %}
+
+      <!-- Refund Requests -->
+      <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">💰 Refund Requests</h3>
+      {% if refunds %}
+      <div class="overflow-x-auto scrollbar-hide bg-white border border-gray-200 rounded-2xl shadow-sm">
+        <table class="min-w-full text-sm text-gray-700">
+          <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+            <tr>
+              <th class="py-3 px-4 text-left">Property</th>
+              <th class="py-3 px-4 text-left">Reason</th>
+              <th class="py-3 px-4 text-left">Status</th>
+              <th class="py-3 px-4 text-left">Requested On</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in refunds %}
+            <tr class="border-b hover:bg-yellow-50 transition">
+              <td class="py-3 px-4">{{ r.purchased_property.property.title }}</td>
+              <td class="py-3 px-4">{{ r.reason }}</td>
+              <td class="py-3 px-4">
+                <span class="px-3 py-1 text-xs rounded-full
+                  {% if r.status == 'Pending' %} bg-yellow-100 text-yellow-700
+                  {% elif r.status == 'Approved' %} bg-green-100 text-green-700
+                  {% elif r.status == 'Rejected' %} bg-red-100 text-red-700
+                  {% endif %}">
+                  {{ r.status }}
+                </span>
+              </td>
+              <td class="py-3 px-4">{{ r.created_at|date:"d M Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center text-gray-600">No refund requests yet.</div>
+      {% endif %}
+
+    </div>
+  </main>
+
+  <!-- Refund Request Modal -->
+  <div id="refundModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">💰 Refund Request</h2>
+      <form method="POST" action="{% url 'refund_request_submit' %}">
+        {% csrf_token %}
+        <input type="hidden" name="purchase_id" id="refundPurchaseId">
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Property</label>
+          <input type="text" id="refundPropertyTitle" class="w-full border rounded-lg p-2 bg-gray-100" readonly>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Reason for Refund</label>
+          <textarea name="reason" required rows="3" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+        </div>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeRefundForm()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Submit</button>
+        </div>
+      </form>
+      <button onclick="closeRefundForm()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">✖</button>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md relative">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">✏️ Edit Profile</h2>
+      <form method="POST" action="{% url 'edit_profile' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Username</label>
+          <input type="text" name="username" value="{{ user.username }}" required class="w-full border rounded-lg p-2">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Email</label>
+          <input type="email" name="email" value="{{ user.email }}" required class="w-full border rounded-lg p-2">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Phone</label>
+          <input type="text" name="phone" value="{{ user.phone }}" class="w-full border rounded-lg p-2">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Profile Picture</label>
+          <input type="file" name="profile_picture" class="w-full">
+        </div>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeEditProfile()" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save</button>
+        </div>
+      </form>
+      <button onclick="closeEditProfile()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">✖</button>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    function openRefundForm(id, title){
+      document.getElementById("refundModal").classList.remove("hidden");
+      document.getElementById("refundPurchaseId").value = id;
+      document.getElementById("refundPropertyTitle").value = title;
+    }
+    function closeRefundForm(){ document.getElementById("refundModal").classList.add("hidden"); }
+
+    function openEditProfile(){ document.getElementById("editProfileModal").classList.remove("hidden"); }
+    function closeEditProfile(){ document.getElementById("editProfileModal").classList.add("hidden"); }
+  </script>
+
+</body>
+</html>

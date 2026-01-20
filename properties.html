@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamNest Properties — Luxury Living Redefined</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #ffffff, #f7fafc);
+      color: #1a202c;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2070&q=80") no-repeat center center/cover;
+      opacity: 0.25;
+      z-index: -2;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 18px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #1e3a8a, #d4af37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .back-button {
+      background: linear-gradient(135deg, #1e3a8a, #d4af37);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.1);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 120px 20px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 25px;
+      margin: 100px 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #1e3a8a, #d4af37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #4a5568;
+      margin-bottom: 40px;
+    }
+
+    .big-button {
+      display: inline-block;
+      padding: 15px 35px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 10px;
+      transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .big-button.buy {
+      background: linear-gradient(135deg, #1e3a8a, #2b6cb0);
+      color: #fff;
+    }
+
+    .big-button.sell {
+      background: linear-gradient(135deg, #d4af37, #f6e05e);
+      color: #1a202c;
+    }
+
+    .big-button:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.1);
+    }
+
+    /* Section Styling */
+    .section {
+      padding: 80px 20px;
+      text-align: center;
+      background: rgba(255,255,255,0.97);
+      border-radius: 25px;
+      margin: 60px 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      animation: fadeInUp 1.3s ease;
+    }
+
+    .section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      background: linear-gradient(90deg, #1e3a8a, #d4af37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 35px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      border-top: 4px solid #d4af37;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      color: #1e3a8a;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: #4a5568;
+      font-size: 1rem;
+    }
+
+    footer {
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      padding: 40px 0;
+      text-align: center;
+      color: #2d3748;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 80px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    footer p span {
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.2rem; }
+      .hero p { font-size: 1rem; }
+      .big-button { display: block; margin: 10px auto; width: 80%; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="{% url 'home' %}" class="back-button">← Back to Home</a>
+        <div class="logo">DreamNest Realty</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Luxury Living, Redefined</h1>
+    <p>Experience the art of fine living with DreamNest — where every property tells a story of elegance and trust.</p>
+    <a href="{% url 'buy_properties' %}" class="big-button buy">Explore Buying</a>
+    <a href="{% url 'selling_create' %}" class="big-button sell">List Your Property</a>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Our Premium Services</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Personalized Guidance</h3>
+          <p>Our agents curate options tailored to your lifestyle, ensuring every choice reflects sophistication.</p>
+        </div>
+        <div class="card">
+          <h3>Luxury Consultation</h3>
+          <p>Get expert advice for buying or selling high-end properties with transparency and confidence.</p>
+        </div>
+        <div class="card">
+          <h3>Smart Investments</h3>
+          <p>We identify lucrative opportunities backed by in-depth market research and integrity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Why Choose DreamNest?</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Excellence</h3>
+          <p>We set benchmarks in premium real estate by combining trust, quality, and innovation.</p>
+        </div>
+        <div class="card">
+          <h3>Transparency</h3>
+          <p>Clear communication, no hidden costs — a partnership built on honesty and class.</p>
+        </div>
+        <div class="card">
+          <h3>Legacy</h3>
+          <p>DreamNest is a symbol of prestige — crafting luxury lifestyles for discerning clients.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 <span>DreamNest Realty</span>. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

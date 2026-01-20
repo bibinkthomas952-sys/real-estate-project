@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="DreamNest Realty" />
+  <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+  <title>DreamNest Realty — Our Premium Services</title>
+
+  <!-- Fonts & Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #f8f8fa;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #1a237e;
+      --accent-2: #d4af37;
+      --radius: 14px;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: #0b1220;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* Navbar */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      transition: all .2s ease;
+    }
+    .site-nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+    }
+    .logo {
+      font-weight: 700;
+      color: var(--accent-2);
+      font-size: 1.4rem;
+      text-decoration: none;
+    }
+    .site-menu {
+      list-style: none;
+      display: flex;
+      gap: 1.2rem;
+      margin: 0;
+      padding: 0;
+    }
+    .site-menu a {
+      color: #101828;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color .3s ease;
+    }
+    .site-menu a:hover {
+      color: var(--accent-2);
+    }
+    .btn-cta {
+      background: linear-gradient(90deg, var(--accent-2), var(--accent));
+      color: #fff;
+      border-radius: 10px;
+      padding: .5rem .9rem;
+      border: none;
+      font-weight: 600;
+      transition: all .3s ease;
+      box-shadow: 0 8px 24px rgba(26, 35, 126, 0.2);
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(26, 35, 126, 0.25);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 70vh;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=80'),
+        url('https://images.unsplash.com/photo-1572120360610-d971b9c79840?auto=format&fit=crop&w=2400&q=80'),
+        url('https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=2400&q=80');
+      background-size: cover;
+      background-position: center;
+      animation: fadeHero 30s infinite alternate;
+      opacity: 0.95;
+    }
+    @keyframes fadeHero {
+      0%, 33% { background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=80'); }
+      34%, 66% { background-image: url('https://images.unsplash.com/photo-1572120360610-d971b9c79840?auto=format&fit=crop&w=2400&q=80'); }
+      67%, 100% { background-image: url('https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=2400&q=80'); }
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(26,35,126,0.5));
+      z-index: 1;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #fff;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .hero-inner h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .hero-inner p {
+      color: rgba(255,255,255,0.85);
+      font-size: 1.1rem;
+      max-width: 700px;
+    }
+
+    /* Services Grid */
+    .services {
+      padding: 5rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .service-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .service-card i {
+      font-size: 2.5rem;
+      color: var(--accent-2);
+      margin-bottom: 1rem;
+    }
+    .service-card h4 {
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+    }
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #0b1220;
+      color: #fff;
+      padding: 3rem 1rem;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    .site-footer a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="container">
+      <a class="logo" href="{% url 'home' %}">DreamNest</a>
+      <ul class="site-menu d-none d-md-flex">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'properties' %}">Properties</a></li>
+        <li><a href="{% url 'services' %}" class="active">Services</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+      </ul>
+      <a class="btn-cta" href="{% url 'user_dashboard' %}">Profile</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner" data-aos="fade-up">
+      <h1>Our Premium Services</h1>
+      <p>Experience world-class real estate services crafted for luxury buyers, investors, and homeowners.</p>
+    </div>
+  </section>
+
+  <!-- SERVICES GRID -->
+  <section class="services">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3" data-aos="zoom-in">
+        <div class="service-card">
+          <i class="fa-solid fa-building"></i>
+          <h4>Exclusive Listings</h4>
+          <p>Access handpicked luxury properties in prime locations, curated just for you.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="100">
+        <div class="service-card">
+          <i class="fa-solid fa-user-tie"></i>
+          <h4>Expert Consultation</h4>
+          <p>Our experienced agents offer personalized guidance to find your dream home.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="200">
+        <div class="service-card">
+          <i class="fa-solid fa-handshake"></i>
+          <h4>Property Management</h4>
+          <p>End-to-end property care, leasing, and investment management you can trust.</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="300">
+        <div class="service-card">
+          <i class="fa-solid fa-globe"></i>
+          <h4>Global Reach</h4>
+          <p>We connect you to top properties and investors across international markets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container d-flex flex-wrap justify-content-between">
+      <div style="max-width:300px;">
+        <a class="logo" href="{% url 'home' %}" style="color:#fff;">DreamNest</a>
+        <p style="color:rgba(255,255,255,0.75);margin-top:.5rem;">Luxury real estate experiences with elegance and trust.</p>
+      </div>
+      <div>
+        <h5>Quick Links</h5>
+        <ul style="list-style:none;padding:0;margin:0;color:#fff;">
+          <li><a href="about">About</a></li>
+          <li><a href="contact">Contact</a></li>
+          <li><a href="terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;color:rgba(255,255,255,0.6);font-size:.9rem;">
+      © <script>document.write(new Date().getFullYear())</script> DreamNest Realty — All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+  </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="DreamNest Realty" />
+  <link rel="shortcut icon" href="{% static 'favicon.png' %}" />
+  <title>DreamNest Realty — Luxury Homes & Prime Properties</title>
+
+  <!-- Fonts & Bootstrap -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #f8f8fa;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent: #1a237e;
+      --accent-2: #d4af37;
+      --radius: 14px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: #0b1220;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    /* --- NAV --- */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      transition: all .2s ease;
+    }
+    .site-nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+    }
+    .logo {
+      font-weight: 700;
+      color: var(--accent-2);
+      letter-spacing: 0.5px;
+      font-size: 1.4rem;
+      text-decoration: none;
+    }
+    .site-menu {
+      list-style: none;
+      display: flex;
+      gap: 1.25rem;
+      margin: 0;
+      padding: 0;
+    }
+    .site-menu a {
+      color: #101828;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color .3s ease;
+    }
+    .site-menu a:hover {
+      color: var(--accent-2);
+    }
+    .btn-cta {
+      background: linear-gradient(90deg, var(--accent-2), var(--accent));
+      color: #fff;
+      border-radius: 10px;
+      padding: .5rem .9rem;
+      border: none;
+      font-weight: 600;
+      transition: all .3s ease;
+      box-shadow: 0 8px 24px rgba(26, 35, 126, 0.2);
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(26, 35, 126, 0.25);
+    }
+
+    /* --- HERO --- */
+    .hero {
+      position: relative;
+      height: 95vh;
+      min-height: 650px;
+      overflow: hidden;
+    }
+
+    /* Multiple layered background images with fade overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=2400&q=80'),
+        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=80'),
+        url('https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=2400&q=80');
+      background-size: cover;
+      background-position: center;
+      animation: fadeHero 30s infinite alternate;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    @keyframes fadeHero {
+      0%, 33% { background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=2400&q=80'); }
+      34%, 66% { background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=80'); }
+      67%, 100% { background-image: url('https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=2400&q=80'); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(26,35,126,0.4));
+      z-index: 1;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #fff;
+    }
+    .hero-heading {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .hero-sub {
+      color: rgba(255,255,255,0.85);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    /* --- PROPERTY GRID --- */
+    .properties {
+      padding: 5rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.8rem;
+    }
+    .prop-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transform: translateY(30px);
+      opacity: 0;
+      transition: all 0.5s ease;
+    }
+    .prop-card[data-aos] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .prop-media {
+      height: 210px;
+      background-size: cover;
+      background-position: center;
+      transition: transform .5s ease;
+    }
+    .prop-card:hover .prop-media {
+      transform: scale(1.05);
+    }
+    .prop-body {
+      padding: 1.2rem;
+    }
+    .prop-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .prop-meta {
+      color: var(--muted);
+      margin-top: .25rem;
+    }
+
+    /* --- CTA --- */
+    .cta {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: #fff;
+      padding: 2rem;
+      border-radius: var(--radius);
+      text-align: center;
+      margin: 3rem auto;
+      max-width: 1100px;
+    }
+
+    /* --- FOOTER --- */
+    .site-footer {
+      background: #0b1220;
+      color: #fff;
+      padding: 3rem 1rem;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+    .site-footer a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="container">
+      <a class="logo" href="{% url 'home' %}">DreamNest</a>
+      <ul class="site-menu d-none d-md-flex">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="properties">Properties</a></li>
+        <li><a href="services">Services</a></li>
+        <li><a href="about">About</a></li>
+        <li><a href="contact">Contact</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-link d-none d-md-inline" href="login">Sign in</a>
+        <a class="btn-cta" href="{% url 'user_dashboard' %}">Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner" data-aos="fade-up">
+      <h1 class="hero-heading">Discover the Art of Luxury Living</h1>
+      <p class="hero-sub">Exclusive residences, prime locations, and unmatched lifestyle experiences — find your next address with DreamNest Realty.</p>
+      <a href="properties" class="btn-cta mt-3">Explore Properties</a>
+    </div>
+  </header>
+
+  <!-- PROPERTIES -->
+  <section class="properties">
+    <h2 data-aos="fade-right" style="font-weight:700;margin-bottom:1.5rem;">Featured Properties</h2>
+    <div class="grid">
+      <article class="prop-card" data-aos="zoom-in">
+        <div class="prop-media" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80');"></div>
+        <div class="prop-body">
+          <div class="prop-title">Ocean View Penthouse</div>
+          <div class="prop-meta">Bandra West · ₹7.5 Cr</div>
+        </div>
+      </article>
+
+      <article class="prop-card" data-aos="zoom-in" data-aos-delay="100">
+        <div class="prop-media" style="background-image:url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80');"></div>
+        <div class="prop-body">
+          <div class="prop-title">Modern Apartment</div>
+          <div class="prop-meta">Powai · ₹1.3 Cr</div>
+        </div>
+      </article>
+
+      <article class="prop-card" data-aos="zoom-in" data-aos-delay="200">
+        <div class="prop-media" style="background-image:url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80');"></div>
+        <div class="prop-body">
+          <div class="prop-title">Luxury Villa</div>
+          <div class="prop-meta">Thane · ₹4.9 Cr</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta" data-aos="fade-up">
+    <h3>Ready to List Your Premium Property?</h3>
+    <p>Join DreamNest and connect with serious buyers who value luxury and location.</p>
+    <a href="{% url 'add_property' %}" class="btn-cta mt-2">List Your Property</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container d-flex flex-wrap justify-content-between">
+      <div style="max-width:300px;">
+        <a class="logo" href="{% url 'home' %}" style="color:#fff;">DreamNest</a>
+        <p style="color:rgba(255,255,255,0.75);margin-top:.5rem;">Luxury real estate experiences with elegance and trust.</p>
+      </div>
+      <div>
+        <h5>Quick Links</h5>
+        <ul style="list-style:none;padding:0;margin:0;color:#fff;">
+          <li><a href="about">About</a></li>
+          <li><a href="contact">Contact</a></li>
+          <li><a href="terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;color:rgba(255,255,255,0.6);font-size:.9rem;">
+      © <script>document.write(new Date().getFullYear())</script> DreamNest Realty — All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+  </script>
+</body>
+</html>
